@@ -105,16 +105,21 @@
 
 .login-card{
 
-    width:420px;
+    width:460px;
 
     background:white;
 
     border-radius:20px;
 
-    padding:45px;
+    padding:50px;
 
     box-shadow:0 20px 50px rgba(0,0,0,.08);
 
+}
+
+.login-card label{
+    font-weight:600;
+    margin-bottom:8px;
 }
 
 .login-card h2{
@@ -135,25 +140,34 @@
 
 .form-control{
 
-    height:50px;
+   height:52px;
+    border-radius:10px;
 
+}
+
+.form-control:focus{
+    border-color:#4F46E5;
+    box-shadow:0 0 0 .2rem rgba(79,70,229,.15);
 }
 
 .btn-primary{
 
-    height:50px;
+    height:52px;
 
     background:#4F46E5;
 
     border:none;
 
-    border-radius:10px;
+    border-radius:12px;
+    transition:.3s ease;
 
 }
 
 .btn-primary:hover{
 
     background:#4338CA;
+    transform:translateY(-2px);
+    box-shadow:0 10px 25px rgba(79,70,229,.35);
 
 }
 
@@ -168,9 +182,8 @@ display:none;
 }
 
 .right-panel{
-
-width:100%;
-
+    background:
+        radial-gradient(circle at top right,#EEF2FF 0%,#F8FAFC 45%);
 }
 
 }

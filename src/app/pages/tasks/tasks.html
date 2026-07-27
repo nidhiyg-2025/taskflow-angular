@@ -1,1 +1,68 @@
-<p>tasks works!</p>
+<div class="tasks-page">
+
+  <div class="page-header">
+    <h2>My Tasks</h2>
+
+    <button class="btn btn-primary">
+      <i class="bi bi-plus-circle"></i>
+      Add Task
+    </button>
+  </div>
+
+  <div class="table-responsive">
+
+    <table class="table align-middle">
+
+      <thead>
+
+        <tr>
+          <th>Title</th>
+          <th>Priority</th>
+          <th>Status</th>
+          <th>Due Date</th>
+          <th>Action</th>
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        @for (task of tasks; track task.id) {
+<tr>
+
+  <td>{{ task.title }}</td>
+
+  <td>
+    <span
+      class="badge"
+      [ngClass]="{
+        'bg-danger': task.priority === 'High',
+        'bg-warning text-dark': task.priority === 'Medium',
+        'bg-success': task.priority === 'Low'
+      }">
+      {{ task.priority }}
+    </span>
+  </td>
+
+  <td>{{ task.status }}</td>
+  <td>{{ task.dueDate }}</td>
+
+  <td>
+    <button class="btn btn-sm btn-outline-primary me-2">
+      <i class="bi bi-pencil"></i>
+    </button>
+
+    <button class="btn btn-sm btn-outline-danger">
+      <i class="bi bi-trash"></i>
+    </button>
+  </td>
+
+</tr>
+}
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>

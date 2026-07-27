@@ -1,0 +1,33 @@
+.tasks-page{
+    padding:30px;
+}
+
+.page-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.table{
+    background:#fff;
+    border-radius:16px;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,.05);
+}
+
+.table th{
+    background:#F8FAFC;
+}
+
+.btn-primary{
+    background:#4F46E5;
+    border:none;
+    border-radius:10px;
+}
+
+.badge{
+    padding:8px 12px;
+    border-radius:20px;
+    font-size:13px;
+}

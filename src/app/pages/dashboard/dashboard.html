@@ -1,6 +1,13 @@
 <div class="dashboard">
 
-  <h2 class="mb-4">Dashboard</h2>
+  <div class="dashboard-header mb-4">
+    <h2>Welcome Back 👋</h2>
+    <p class="text-muted">
+      Here's an overview of your tasks and progress.
+    </p>
+  </div>
+
+  <!-- Statistics -->
 
   <div class="cards">
 
@@ -8,8 +15,9 @@
       <div class="icon blue">
         <i class="bi bi-list-task"></i>
       </div>
+
       <div>
-        <h3>120</h3>
+        <h3>{{ totalTasks }}</h3>
         <p>Total Tasks</p>
       </div>
     </div>
@@ -18,8 +26,9 @@
       <div class="icon green">
         <i class="bi bi-check-circle-fill"></i>
       </div>
+
       <div>
-        <h3>95</h3>
+        <h3>{{ completedTasks }}</h3>
         <p>Completed</p>
       </div>
     </div>
@@ -28,8 +37,9 @@
       <div class="icon orange">
         <i class="bi bi-clock-fill"></i>
       </div>
+
       <div>
-        <h3>18</h3>
+        <h3>{{ pendingTasks }}</h3>
         <p>Pending</p>
       </div>
     </div>
@@ -38,10 +48,195 @@
       <div class="icon purple">
         <i class="bi bi-graph-up-arrow"></i>
       </div>
+
       <div>
-        <h3>7</h3>
+        <h3>{{ inProgressTasks }}</h3>
         <p>In Progress</p>
       </div>
+    </div>
+
+  </div>
+
+  <!-- Recent Tasks & Upcoming Deadlines -->
+
+  <div class="row mt-4">
+
+    <div class="col-lg-6 mb-4">
+
+      <div class="card shadow-sm dashboard-card">
+
+        <div class="card-header">
+          <h5 class="mb-0">Recent Tasks</h5>
+        </div>
+
+        <div class="card-body">
+
+          @if(recentTasks.length > 0){
+
+            <ul class="list-group list-group-flush">
+
+              @for(task of recentTasks; track task.id){
+
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+
+                  <div>
+                    <strong>{{ task.title }}</strong><br>
+                    <small>{{ task.dueDate }}</small>
+                  </div>
+
+                  <span
+                    class="badge"
+                    [ngClass]="{
+                      'bg-success': task.status === 'Completed',
+                      'bg-warning text-dark': task.status === 'Pending',
+                      'bg-primary': task.status === 'In Progress'
+                    }">
+
+                    {{ task.status }}
+
+                  </span>
+
+                </li>
+
+              }
+
+            </ul>
+
+          } @else {
+
+            <p class="text-muted">No tasks available.</p>
+
+          }
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="col-lg-6 mb-4">
+
+      <div class="card shadow-sm dashboard-card">
+
+        <div class="card-header">
+          <h5 class="mb-0">Upcoming Deadlines</h5>
+        </div>
+
+        <div class="card-body">
+
+          @if(upcomingTasks.length > 0){
+
+            <ul class="list-group list-group-flush">
+
+              @for(task of upcomingTasks; track task.id){
+
+                <li class="list-group-item d-flex justify-content-between">
+
+                  <div>
+                    <i class="bi bi-calendar-event me-2 text-primary"></i>
+                    <strong>{{ task.title }}</strong>
+                  </div>
+
+                  <span class="text-muted">
+                    {{ task.dueDate }}
+                  </span>
+
+                </li>
+
+              }
+
+            </ul>
+
+          } @else {
+
+            <p class="text-muted">No upcoming deadlines.</p>
+
+          }
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Overall Progress -->
+
+  <div class="card shadow-sm mb-4">
+
+    <div class="card-body">
+
+      <div class="d-flex justify-content-between mb-2">
+
+        <h5>Overall Progress</h5>
+
+        <strong>{{ progressPercentage }}%</strong>
+
+      </div>
+
+      <div class="progress">
+
+        <div
+          class="progress-bar bg-success"
+          [style.width.%]="progressPercentage">
+        </div>
+
+      </div>
+
+      <p class="text-muted mt-3 mb-0">
+
+        {{ completedTasks }} of {{ totalTasks }} tasks completed
+
+      </p>
+
+    </div>
+
+  </div>
+
+  <!-- Priority Summary -->
+
+  <div class="card shadow-sm">
+
+    <div class="card-header">
+      <h5 class="mb-0">Priority Summary</h5>
+    </div>
+
+    <div class="card-body">
+
+      <div class="d-flex justify-content-between mb-3">
+
+        <span class="text-danger">
+          <i class="bi bi-circle-fill"></i>
+          High Priority
+        </span>
+
+        <strong>{{ highPriority }}</strong>
+
+      </div>
+
+      <div class="d-flex justify-content-between mb-3">
+
+        <span class="text-warning">
+          <i class="bi bi-circle-fill"></i>
+          Medium Priority
+        </span>
+
+        <strong>{{ mediumPriority }}</strong>
+
+      </div>
+
+      <div class="d-flex justify-content-between">
+
+        <span class="text-success">
+          <i class="bi bi-circle-fill"></i>
+          Low Priority
+        </span>
+
+        <strong>{{ lowPriority }}</strong>
+
+      </div>
+
     </div>
 
   </div>

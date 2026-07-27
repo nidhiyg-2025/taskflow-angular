@@ -51,3 +51,36 @@
     margin:0;
     color:#6B7280;
 }
+
+.dashboard-header h2 {
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.dashboard-header p {
+  color: #6B7280;
+}
+
+.dashboard-card {
+  height: 100%;
+}
+
+.card {
+  border: none;
+  border-radius: 18px;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+.progress {
+  height: 14px;
+  border-radius: 20px;
+}
+
+.progress-bar {
+  border-radius: 20px;
+}

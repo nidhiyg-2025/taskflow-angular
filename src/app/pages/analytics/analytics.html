@@ -1,1 +1,103 @@
-<p>analytics works!</p>
+<div class="analytics">
+
+  <!-- Page Header -->
+  <div class="page-header mb-4">
+    <h2>Analytics</h2>
+    <p class="text-muted">
+      Track task progress and productivity insights.
+    </p>
+  </div>
+
+  <!-- Charts -->
+  <div class="row">
+
+    <!-- Task Status -->
+    <div class="col-lg-6 mb-4">
+
+      <div class="card shadow-sm h-100">
+
+        <div class="card-header">
+          <h5 class="mb-0">Task Status</h5>
+        </div>
+
+        <div class="card-body">
+
+          <app-dashboard-chart
+            [completed]="completedTasks"
+            [pending]="pendingTasks"
+            [inProgress]="inProgressTasks">
+          </app-dashboard-chart>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Priority Distribution -->
+    <div class="col-lg-6 mb-4">
+
+      <div class="card shadow-sm h-100">
+
+        <div class="card-header">
+          <h5 class="mb-0">Priority Distribution</h5>
+        </div>
+
+        <div class="card-body">
+
+          <app-priority-chart
+            [high]="highPriority"
+            [medium]="mediumPriority"
+            [low]="lowPriority">
+          </app-priority-chart>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="row">
+
+    <div class="col-md-3 mb-3">
+
+      <div class="card summary-card">
+        <h3>{{ totalTasks }}</h3>
+        <p>Total Tasks</p>
+      </div>
+
+    </div>
+
+    <div class="col-md-3 mb-3">
+
+      <div class="card summary-card">
+        <h3>{{ completedTasks }}</h3>
+        <p>Completed</p>
+      </div>
+
+    </div>
+
+    <div class="col-md-3 mb-3">
+
+      <div class="card summary-card">
+        <h3>{{ pendingTasks }}</h3>
+        <p>Pending</p>
+      </div>
+
+    </div>
+
+    <div class="col-md-3 mb-3">
+
+      <div class="card summary-card">
+        <h3>{{ inProgressTasks }}</h3>
+        <p>In Progress</p>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

@@ -1,25 +1,111 @@
 <nav class="navbar">
 
-  <div class="search-box">
-    <i class="bi bi-search"></i>
-    <input type="text" placeholder="Search tasks...">
+  <div class="page-title">
+   <h3>{{ pageTitle }}</h3>
+<span>{{ pageSubtitle }}</span>
   </div>
 
-  <div class="nav-right">
+  <div class="navbar-right">
 
-    <button class="icon-btn">
-      <i class="bi bi-bell"></i>
-    </button>
+    <!-- Notifications -->
+    <div class="notification-container">
 
-    <div class="profile">
-      <img
-        src="https://ui-avatars.com/api/?name=Nidhi&background=4F46E5&color=fff"
-        alt="Profile">
+      <button
+        class="icon-btn"
+        (click)="toggleNotifications()">
 
-      <div>
-        <h6>Nidhi</h6>
-        <small>Project Manager</small>
+        <i class="bi bi-bell"></i>
+
+        @if(notifications.length > 0){
+          <span class="badge">
+            {{ notifications.length }}
+          </span>
+        }
+
+      </button>
+
+      @if(showNotifications){
+
+      <div class="notification-menu">
+
+        <h5>Notifications</h5>
+
+        @if(notifications.length > 0){
+
+          @for(task of notifications; track task.id){
+
+            <div class="notification-item">
+
+              <strong>{{ task.title }}</strong>
+
+              <small>Due: {{ task.dueDate }}</small>
+
+            </div>
+
+          }
+
+        } @else {
+
+          <p class="empty">
+            No upcoming tasks 🎉
+          </p>
+
+        }
+
       </div>
+
+      }
+
+    </div>
+
+    <!-- Profile -->
+
+    <div class="profile-container">
+
+      <div
+        class="profile"
+        (click)="toggleProfileMenu()">
+
+        <img
+          src="https://ui-avatars.com/api/?name=Nidhi&background=4F46E5&color=fff"
+          alt="Profile">
+
+        <div class="profile-details">
+
+          <h6>Nidhi</h6>
+
+          <small>Project Manager</small>
+
+        </div>
+
+        <i class="bi bi-chevron-down"></i>
+
+      </div>
+
+      @if(showProfileMenu){
+
+      <div class="profile-menu">
+
+        <a routerLink="/app/settings">
+          <i class="bi bi-person"></i>
+          My Profile
+        </a>
+
+        <a routerLink="/app/settings">
+          <i class="bi bi-gear"></i>
+          Settings
+        </a>
+
+        <hr>
+
+        <button (click)="logout()">
+          <i class="bi bi-box-arrow-right"></i>
+          Logout
+        </button>
+
+      </div>
+
+      }
 
     </div>
 

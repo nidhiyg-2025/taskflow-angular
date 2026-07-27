@@ -19,60 +19,17 @@ interface Task {
   styleUrl: './tasks.css'
 })
 export class Tasks {
+
   searchText = '';
+  selectedStatus = '';
+  selectedPriority = '';
 
-filteredTasks: Task[] = [];
-selectedStatus = '';
-selectedPriority = '';
-isEditMode = false;
-editingTaskId = 0;
-  tasks: Task[] = [
-    {
-      id: 1,
-      title: 'Design Authentication Screen',
-      description: 'Create premium login UI',
-      priority: 'High',
-      status: 'Completed',
-      dueDate: '28 Jul 2026'
-    },
-    {
-      id: 2,
-      title: 'Build Dashboard Layout',
-      description: 'Design dashboard cards and charts',
-      priority: 'Medium',
-      status: 'In Progress',
-      dueDate: '30 Jul 2026'
-    },
-    {
-      id: 3,
-      title: 'Develop Analytics Module',
-      description: 'Implement analytics graphs',
-      priority: 'Low',
-      status: 'Pending',
-      dueDate: '02 Aug 2026'
-    }
-  ];
-
-constructor() {
-
-  const savedTasks = localStorage.getItem('tasks');
-
-  if (savedTasks) {
-    this.tasks = JSON.parse(savedTasks);
-  }
-
-  this.filteredTasks = [...this.tasks];
-}
-
-saveToLocalStorage() {
-  localStorage.setItem('tasks', JSON.stringify(this.tasks));
-}
-
-searchTasks() {
-  this.filterTasks();
-}
+  tasks: Task[] = [];
+  filteredTasks: Task[] = [];
 
   showModal = false;
+  isEditMode = false;
+  editingTaskId = 0;
 
   newTask: Task = {
     id: 0,
@@ -83,126 +40,180 @@ searchTasks() {
     dueDate: ''
   };
 
- openModal() {
-
-  this.isEditMode = false;
-  this.editingTaskId = 0;
-
-  this.newTask = {
-    id: 0,
-    title: '',
-    description: '',
-    priority: 'Medium',
-    status: 'Pending',
-    dueDate: ''
-  };
-
-  this.showModal = true;
-}
-
-closeModal() {
-
-  this.showModal = false;
-
-  this.isEditMode = false;
-  this.editingTaskId = 0;
-
-  this.newTask = {
-    id: 0,
-    title: '',
-    description: '',
-    priority: 'Medium',
-    status: 'Pending',
-    dueDate: ''
-  };
-}
-
-  editTask(task: Task) {
-
-  this.isEditMode = true;
-  this.editingTaskId = task.id;
-
-  this.newTask = {
-    ...task
-  };
-
-  this.showModal = true;
-}
-
-deleteTask(id: number) {
-
-  const confirmDelete = confirm('Are you sure you want to delete this task?');
-
-  if (confirmDelete) {
-    this.tasks = this.tasks.filter(task => task.id !== id);
+  constructor() {
+    this.loadTasks();
   }
-  this.filterTasks();
-  this.saveToLocalStorage();
-this.filterTasks();
 
-}
+  loadTasks() {
 
-filterTasks() {
+    const savedTasks = localStorage.getItem('tasks');
 
-  this.filteredTasks = this.tasks.filter(task => {
+    if (savedTasks) {
 
-    const matchesSearch =
-      task.title.toLowerCase().includes(this.searchText.toLowerCase());
+      this.tasks = JSON.parse(savedTasks);
 
-    const matchesStatus =
-      this.selectedStatus === '' ||
-      task.status === this.selectedStatus;
+    } else {
 
-    const matchesPriority =
-      this.selectedPriority === '' ||
-      task.priority === this.selectedPriority;
+      this.tasks = [
+        {
+          id: 1,
+          title: 'Design Authentication Screen',
+          description: 'Create premium login UI',
+          priority: 'High',
+          status: 'Completed',
+          dueDate: '2026-07-28'
+        },
+        {
+          id: 2,
+          title: 'Build Dashboard Layout',
+          description: 'Design dashboard cards and charts',
+          priority: 'Medium',
+          status: 'In Progress',
+          dueDate: '2026-07-30'
+        },
+        {
+          id: 3,
+          title: 'Develop Analytics Module',
+          description: 'Implement analytics graphs',
+          priority: 'Low',
+          status: 'Pending',
+          dueDate: '2026-08-02'
+        }
+      ];
 
-    return matchesSearch && matchesStatus && matchesPriority;
+      this.saveToLocalStorage();
 
-  });
+    }
 
-}
+    this.filterTasks();
+
+  }
+
+  saveToLocalStorage() {
+    localStorage.setItem('tasks', JSON.stringify(this.tasks));
+  }
+
+  searchTasks() {
+    this.filterTasks();
+  }
+
+  filterTasks() {
+
+    const search = this.searchText.toLowerCase();
+
+    this.filteredTasks = this.tasks.filter(task => {
+
+      const matchesSearch =
+        task.title.toLowerCase().includes(search) ||
+        task.description.toLowerCase().includes(search) ||
+        task.priority.toLowerCase().includes(search) ||
+        task.status.toLowerCase().includes(search);
+
+      const matchesStatus =
+        this.selectedStatus === '' ||
+        task.status === this.selectedStatus;
+
+      const matchesPriority =
+        this.selectedPriority === '' ||
+        task.priority === this.selectedPriority;
+
+      return matchesSearch && matchesStatus && matchesPriority;
+
+    });
+
+  }
+
+  openModal() {
+
+    this.isEditMode = false;
+    this.editingTaskId = 0;
+
+    this.newTask = {
+      id: 0,
+      title: '',
+      description: '',
+      priority: 'Medium',
+      status: 'Pending',
+      dueDate: ''
+    };
+
+    this.showModal = true;
+
+  }
+
+  closeModal() {
+
+    this.showModal = false;
+
+    this.isEditMode = false;
+    this.editingTaskId = 0;
+
+    this.newTask = {
+      id: 0,
+      title: '',
+      description: '',
+      priority: 'Medium',
+      status: 'Pending',
+      dueDate: ''
+    };
+
+  }
 
   saveTask() {
 
-  if (this.isEditMode) {
+    if (this.isEditMode) {
 
-    const index = this.tasks.findIndex(t => t.id === this.editingTaskId);
+      const index = this.tasks.findIndex(
+        task => task.id === this.editingTaskId
+      );
 
-    if (index !== -1) {
-      this.tasks[index] = {
+      if (index !== -1) {
+
+        this.tasks[index] = {
+          ...this.newTask,
+          id: this.editingTaskId
+        };
+
+      }
+
+    } else {
+
+      this.tasks.unshift({
         ...this.newTask,
-        id: this.editingTaskId
-      };
+        id: Date.now()
+      });
+
     }
 
-  } else {
+    this.saveToLocalStorage();
+    this.filterTasks();
+    this.closeModal();
 
-    const task: Task = {
-      ...this.newTask,
-      id: this.tasks.length + 1
-    };
-
-    this.tasks.unshift(task);
   }
 
-  this.newTask = {
-    id: 0,
-    title: '',
-    description: '',
-    priority: 'Medium',
-    status: 'Pending',
-    dueDate: ''
-  };
+  editTask(task: Task) {
 
-  this.isEditMode = false;
-  this.editingTaskId = 0;
+    this.isEditMode = true;
+    this.editingTaskId = task.id;
 
-  this.closeModal();
-this.filterTasks();
-this.saveToLocalStorage();
-this.filterTasks();
-}
+    this.newTask = { ...task };
 
+    this.showModal = true;
+
+  }
+
+  deleteTask(id: number) {
+
+    if (confirm('Are you sure you want to delete this task?')) {
+
+      this.tasks = this.tasks.filter(task => task.id !== id);
+
+      this.saveToLocalStorage();
+
+      this.filterTasks();
+
+    }
+
+  }
 
 }

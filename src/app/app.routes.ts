@@ -6,6 +6,7 @@ import { Tasks } from './pages/tasks/tasks';
 import { Analytics } from './pages/analytics/analytics';
 import { Calendar } from './pages/calendar/calendar';
 import { Settings } from './pages/settings/settings';
+import { authGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
   {
@@ -15,6 +16,7 @@ export const routes: Routes = [
   {
     path: 'app',
     component: Layout,
+    canActivate: [authGuard],
     children: [
       { path: 'dashboard', component: Dashboard },
       { path: 'tasks', component: Tasks },

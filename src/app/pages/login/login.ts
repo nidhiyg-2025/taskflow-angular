@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -26,10 +27,26 @@ export class Login {
 
     } else {
 
-      alert('Invalid Email or Password');
+      Swal.fire({
+  icon: 'error',
+  title: 'Login Failed',
+  text: 'Invalid email or password'
+});
 
     }
-    
+    Swal.fire({
+  icon: 'success',
+  title: 'Welcome!',
+  text: 'Login successful',
+  timer: 1500,
+  showConfirmButton: false
+}).then(() => {
+
+  localStorage.setItem('isLoggedIn', 'true');
+
+  this.router.navigate(['/app/dashboard']);
+
+});
 
   }
   showPassword = false;

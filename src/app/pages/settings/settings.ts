@@ -13,7 +13,7 @@ import { FormsModule } from '@angular/forms';
 export class Settings implements OnInit {
 
 
-  profileImage = 'assets/profile.png';
+ 
 
 
   editProfile = false;

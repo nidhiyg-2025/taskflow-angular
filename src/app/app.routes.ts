@@ -20,7 +20,13 @@ export const routes: Routes = [
       { path: 'tasks', component: Tasks },
       { path: 'analytics', component: Analytics },
       { path: 'calendar', component: Calendar },
-      { path: 'settings', component: Settings },
+      {
+  path:'settings',
+  loadComponent:()=> 
+  import('./pages/settings/settings')
+  .then(m=>m.Settings)
+},
+
 
       // Default child route
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }

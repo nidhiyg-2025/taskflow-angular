@@ -1,1 +1,226 @@
-<p>settings works!</p>
+<div class="settings-page">
+
+
+<h2>
+Settings
+</h2>
+
+
+<p class="subtitle">
+Manage your TaskFlow preferences
+</p>
+
+
+
+
+<!-- Profile Card -->
+
+<div class="profile-card">
+
+
+<img
+[src]="profileImage"
+class="profile-img">
+
+
+
+<div class="profile-info">
+
+
+<h3>
+{{user.name}}
+</h3>
+
+
+<p>
+{{user.email}}
+</p>
+
+
+</div>
+
+
+
+
+<button
+class="btn btn-outline-primary"
+(click)="toggleProfileEdit()">
+
+{{editProfile ? 'Close' : 'Edit Profile'}}
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+<!-- Edit Profile -->
+
+@if(editProfile){
+
+<div class="settings-card">
+
+
+<h4>
+Edit Profile
+</h4>
+
+
+
+<label>
+Name
+</label>
+
+
+<input
+class="form-control"
+[(ngModel)]="user.name">
+
+
+
+<label class="mt-3">
+Email
+</label>
+
+
+<input
+class="form-control"
+[(ngModel)]="user.email">
+
+
+
+<button
+class="btn btn-success mt-3"
+(click)="saveProfile()">
+
+Save Profile
+
+</button>
+
+
+</div>
+
+}
+
+
+
+
+
+
+<!-- Preferences -->
+
+
+<div class="settings-card">
+
+
+<h4>
+Preferences
+</h4>
+
+<div class="setting-row">
+
+<span>
+Task Reminder
+</span>
+
+
+<input
+type="checkbox"
+[(ngModel)]="settings.taskReminder">
+
+</div>
+
+
+
+
+
+<label class="mt-3">
+
+Default Priority
+
+</label>
+
+
+
+<select
+class="form-control"
+[(ngModel)]="settings.defaultPriority">
+
+
+<option>
+High
+</option>
+
+
+<option>
+Medium
+</option>
+
+
+<option>
+Low
+</option>
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- Data Management -->
+
+
+<div class="settings-card">
+
+
+<h4>
+Data Management
+</h4>
+
+
+
+<button
+class="btn btn-primary"
+(click)="saveSettings()">
+
+Save Settings
+
+</button>
+
+
+
+<button
+class="btn btn-danger ms-3"
+(click)="clearTasks()">
+
+Clear Tasks
+
+</button>
+
+
+
+<button
+class="btn btn-warning ms-3"
+(click)="resetSettings()">
+
+Reset
+
+</button>
+
+
+
+</div>
+
+
+
+</div>

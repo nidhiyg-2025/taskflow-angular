@@ -19,6 +19,7 @@ A modern task management application built with Angular.
 - Angular 21
 - TypeScript
 - Bootstrap 5
+- Bootstrap Icons
 - SweetAlert2
 - HTML5
 - CSS3
@@ -28,11 +29,13 @@ A modern task management application built with Angular.
 ```bash
 npm install
 ng serve
+```
 
 
 # Screenshots
 
 ## Login
+<<<<<<< HEAD
 ![Login](Screenshots/Login.png)
 
 ## Register
@@ -58,3 +61,31 @@ ng serve
 
 ## Settings
 ![Settings](Screenshots/settings.png)
+=======
+
+![Login](Screenshots/Login.png)
+
+## Register
+
+![Register](Screenshots/register.png)
+
+## Dashboard
+
+![Dashboard](Screenshots/dashboard.png)
+
+## Tasks
+
+![Tasks](Screenshots/tasks.png)
+
+## Calendar
+
+![Calendar](Screenshots/calender.png)
+
+## Analytics
+
+![Analytics](Screenshots/analytics.png)
+
+## Settings
+
+![Settings](Screenshots/settings.png)
+>>>>>>> 7dff286 (Fix README screenshots)

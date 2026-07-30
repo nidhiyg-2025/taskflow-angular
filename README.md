@@ -28,3 +28,26 @@ A modern task management application built with Angular.
 ```bash
 npm install
 ng serve
+
+# Screenshots
+
+## Login
+![Login](screenshots/login.png)
+
+## Register
+![Register](screenshots/register.png)
+
+## Dashboard
+![Dashboard](screenshots/dashboard.png)
+
+## Tasks
+![Tasks](screenshots/tasks.png)
+
+## Calendar
+![Calendar](screenshots/calendar.png)
+
+## Analytics
+![Analytics](screenshots/analytics.png)
+
+## Settings
+![Settings](screenshots/settings.png)

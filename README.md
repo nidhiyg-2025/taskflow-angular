@@ -33,7 +33,7 @@ ng serve
 # Screenshots
 
 ## Login
-![Login](Screenshots/login.png)
+![Login](Screenshots/Login.png)
 
 ## Register
 ![Register](Screenshots/register.png)
@@ -45,7 +45,13 @@ ng serve
 ![Tasks](Screenshots/tasks.png)
 
 ## Calendar
-![Calendar](Screenshots/calendar.png)
+![Calendar](Screenshots/calender.png)
+
+## Analytics
+![Analytics](Screenshots/analytics.png)
+
+## Settings
+![Settings](Screenshots/settings.png)
 
 ## Analytics
 ![Analytics](Screenshots/analytics.png)

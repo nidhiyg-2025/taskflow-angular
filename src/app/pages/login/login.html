@@ -90,7 +90,9 @@
 
           </div>
 
-          <a href="#">Forgot Password?</a>
+          <a routerLink="/forgot-password">
+  Forgot Password?
+</a>
 
         </div>
 
@@ -99,6 +101,21 @@
           Sign In
 
         </button>
+
+        <div class="register-link mt-4 text-center">
+
+<p class="mt-4 text-center">
+  Don't have an account?
+
+<button
+  type="button"
+  class="btn btn-outline-primary"
+  (click)="goToRegister()">
+  Create Account
+</button>
+</p>
+
+</div>
 
       </form>
 

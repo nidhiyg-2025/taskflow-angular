@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, RouterModule],
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
@@ -17,38 +17,53 @@ export class Login {
 
   constructor(private router: Router) {}
 
-  login() {
+ login() {
 
-    if (this.email === 'admin@gmail.com' && this.password === 'admin123') {
+  const users = JSON.parse(
+    localStorage.getItem('users') || '[]'
+  );
 
-      localStorage.setItem('isLoggedIn', 'true');
+  const user = users.find(
+    (u: any) =>
+      u.email === this.email &&
+      u.password === this.password
+  );
 
-      this.router.navigate(['/app/dashboard']);
+  if (!user) {
 
-    } else {
-
-      Swal.fire({
-  icon: 'error',
-  title: 'Login Failed',
-  text: 'Invalid email or password'
-});
-
-    }
     Swal.fire({
-  icon: 'success',
-  title: 'Welcome!',
-  text: 'Login successful',
-  timer: 1500,
-  showConfirmButton: false
-}).then(() => {
+      icon: 'error',
+      title: 'Login Failed',
+      text: 'Invalid email or password'
+    });
+
+    return;
+
+  }
 
   localStorage.setItem('isLoggedIn', 'true');
 
-  this.router.navigate(['/app/dashboard']);
+  localStorage.setItem(
+    'currentUser',
+    JSON.stringify(user)
+  );
 
-});
+  Swal.fire({
+    icon: 'success',
+    title: 'Welcome',
+    text: `Hello ${user.fullName}`,
+    timer: 1500,
+    showConfirmButton: false
+  }).then(() => {
 
-  }
+    this.router.navigate(['/app/dashboard']);
+
+  });
+
+}
+goToRegister() {
+  this.router.navigate(['/register']);
+}
   showPassword = false;
 
 togglePassword() {

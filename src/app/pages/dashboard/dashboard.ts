@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 
@@ -21,6 +22,8 @@ interface Task {
 })
 export class Dashboard implements OnInit {
 
+  constructor(private router: Router) {}
+
   // Dashboard Statistics
   totalTasks = 0;
   completedTasks = 0;
@@ -41,17 +44,44 @@ export class Dashboard implements OnInit {
 
  
 
-  ngOnInit(): void {
-    this.loadDashboard();
-  }
+ ngOnInit(): void {
+
+  this.loadDashboard();
+
+  this.router.events.subscribe(event => {
+
+    if (event instanceof NavigationEnd) {
+
+      this.loadDashboard();
+
+    }
+
+  });
+
+}
 
   loadDashboard(): void {
 
     const savedTasks = localStorage.getItem('tasks');
 
     if (!savedTasks) {
-      return;
-    }
+
+  this.totalTasks = 0;
+  this.completedTasks = 0;
+  this.pendingTasks = 0;
+  this.inProgressTasks = 0;
+
+  this.highPriority = 0;
+  this.mediumPriority = 0;
+  this.lowPriority = 0;
+
+  this.progressPercentage = 0;
+
+  this.recentTasks = [];
+  this.upcomingTasks = [];
+
+  return;
+}
 
     const tasks: Task[] = JSON.parse(savedTasks);
 

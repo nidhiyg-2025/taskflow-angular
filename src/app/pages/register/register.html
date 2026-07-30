@@ -1,0 +1,123 @@
+<div class="register-container">
+
+  <div class="register-card">
+
+    <h2>Create Account</h2>
+
+    <p class="subtitle">
+      Create your TaskFlow account
+    </p>
+
+    <!-- Full Name -->
+
+    <div class="form-group">
+
+      <label>Full Name</label>
+
+      <input
+        type="text"
+        class="form-control"
+        [(ngModel)]="fullName"
+        placeholder="Enter your full name">
+
+    </div>
+
+    <!-- Email -->
+
+    <div class="form-group mt-3">
+
+      <label>Email</label>
+
+      <input
+        type="email"
+        class="form-control"
+        [(ngModel)]="email"
+        placeholder="Enter your email">
+
+    </div>
+
+    <!-- Password -->
+
+    <div class="form-group mt-3">
+
+      <label>Password</label>
+
+      <div class="password-box">
+
+        <input
+          [type]="showPassword ? 'text' : 'password'"
+          class="form-control"
+          [(ngModel)]="password"
+          placeholder="Enter password">
+
+        <button
+          type="button"
+          class="toggle-btn"
+          (click)="togglePassword()">
+
+          <i
+            class="bi"
+            [class.bi-eye]="!showPassword"
+            [class.bi-eye-slash]="showPassword">
+          </i>
+
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- Confirm Password -->
+
+    <div class="form-group mt-3">
+
+      <label>Confirm Password</label>
+
+      <div class="password-box">
+
+        <input
+          [type]="showConfirmPassword ? 'text' : 'password'"
+          class="form-control"
+          [(ngModel)]="confirmPassword"
+          placeholder="Confirm password">
+
+        <button
+          type="button"
+          class="toggle-btn"
+          (click)="toggleConfirmPassword()">
+
+          <i
+            class="bi"
+            [class.bi-eye]="!showConfirmPassword"
+            [class.bi-eye-slash]="showConfirmPassword">
+          </i>
+
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- Register -->
+
+    <button
+      class="btn btn-primary w-100 mt-4"
+      (click)="register()">
+
+      Create Account
+
+    </button>
+
+    <div class="login-link">
+
+      Already have an account?
+
+      <a routerLink="/login">
+  Login
+</a>
+
+    </div>
+
+  </div>
+
+</div>

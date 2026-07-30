@@ -7,12 +7,26 @@ import { Analytics } from './pages/analytics/analytics';
 import { Calendar } from './pages/calendar/calendar';
 import { Settings } from './pages/settings/settings';
 import { authGuard } from './guards/auth-guard';
+import { Register } from './pages/register/register';
 
 export const routes: Routes = [
+
   {
     path: '',
+    redirectTo: 'login',
+    pathMatch: 'full'
+  },
+
+  {
+    path: 'login',
     component: Login
   },
+
+  {
+    path: 'register',
+    component: Register
+  },
+
   {
     path: 'app',
     component: Layout,
@@ -23,19 +37,21 @@ export const routes: Routes = [
       { path: 'analytics', component: Analytics },
       { path: 'calendar', component: Calendar },
       {
-  path:'settings',
-  loadComponent:()=> 
-  import('./pages/settings/settings')
-  .then(m=>m.Settings)
-},
-
-
-      // Default child route
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
+        path: 'settings',
+        loadComponent: () =>
+          import('./pages/settings/settings').then(m => m.Settings)
+      },
+      {
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full'
+      }
     ]
   },
+
   {
     path: '**',
-    redirectTo: ''
+    redirectTo: 'login'
   }
+
 ];

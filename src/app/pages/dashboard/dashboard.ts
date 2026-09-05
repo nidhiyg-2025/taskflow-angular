@@ -1,8 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
-
-
 
 interface Task {
   id: number;
@@ -21,97 +18,102 @@ interface Task {
   styleUrl: './dashboard.css'
 })
 export class Dashboard implements OnInit {
-
-  constructor(private router: Router) {}
-
-  // Dashboard Statistics
+  userName = '';
   totalTasks = 0;
   completedTasks = 0;
   pendingTasks = 0;
   inProgressTasks = 0;
 
-  // Priority Summary
   highPriority = 0;
   mediumPriority = 0;
   lowPriority = 0;
 
-  // Progress
   progressPercentage = 0;
 
-  // Task Lists
   recentTasks: Task[] = [];
   upcomingTasks: Task[] = [];
 
- 
+  ngOnInit(): void {
+  const user = this.getCurrentUser();
 
- ngOnInit(): void {
+  if (user) {
+    this.userName = user.fullName;
+  }
 
   this.loadDashboard();
+}
 
-  this.router.events.subscribe(event => {
+  getCurrentUser(): any {
 
-    if (event instanceof NavigationEnd) {
+    const user = localStorage.getItem('currentUser');
 
-      this.loadDashboard();
-
+    if (user) {
+      return JSON.parse(user);
     }
 
-  });
+    return null;
+  }
 
-}
+  getTaskStorageKey(): string {
+
+    const user = this.getCurrentUser();
+
+    if (!user) {
+      return 'tasks_guest';
+    }
+
+    return `tasks_${user.id}`;
+  }
 
   loadDashboard(): void {
 
-    const savedTasks = localStorage.getItem('tasks');
+    const storageKey = this.getTaskStorageKey();
 
-    if (!savedTasks) {
+    const savedTasks = localStorage.getItem(storageKey);
 
-  this.totalTasks = 0;
-  this.completedTasks = 0;
-  this.pendingTasks = 0;
-  this.inProgressTasks = 0;
+    const tasks: Task[] = savedTasks
+      ? JSON.parse(savedTasks)
+      : [];
 
-  this.highPriority = 0;
-  this.mediumPriority = 0;
-  this.lowPriority = 0;
-
-  this.progressPercentage = 0;
-
-  this.recentTasks = [];
-  this.upcomingTasks = [];
-
-  return;
-}
-
-    const tasks: Task[] = JSON.parse(savedTasks);
-
-    // Statistics
     this.totalTasks = tasks.length;
-    this.completedTasks = tasks.filter(t => t.status === 'Completed').length;
-    this.pendingTasks = tasks.filter(t => t.status === 'Pending').length;
-    this.inProgressTasks = tasks.filter(t => t.status === 'In Progress').length;
 
-    // Recent Tasks
-    this.recentTasks = [...tasks]
-      .reverse()
-      .slice(0, 5);
+    this.completedTasks =
+      tasks.filter(t => t.status === 'Completed').length;
 
-    // Upcoming Deadlines
-    this.upcomingTasks = [...tasks]
-      .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())
-      .slice(0, 5);
+    this.pendingTasks =
+      tasks.filter(t => t.status === 'Pending').length;
 
-    // Progress
-    this.progressPercentage = this.totalTasks > 0
-      ? Math.round((this.completedTasks / this.totalTasks) * 100)
-      : 0;
+    this.inProgressTasks =
+      tasks.filter(t => t.status === 'In Progress').length;
 
-    // Priority Summary
-    this.highPriority = tasks.filter(t => t.priority === 'High').length;
-    this.mediumPriority = tasks.filter(t => t.priority === 'Medium').length;
-    this.lowPriority = tasks.filter(t => t.priority === 'Low').length;
+    this.recentTasks =
+      [...tasks]
+        .reverse()
+        .slice(0, 5);
+
+    this.upcomingTasks =
+      [...tasks]
+        .sort(
+          (a, b) =>
+            new Date(a.dueDate).getTime() -
+            new Date(b.dueDate).getTime()
+        )
+        .slice(0, 5);
+
+    this.progressPercentage =
+      this.totalTasks > 0
+        ? Math.round(
+            (this.completedTasks / this.totalTasks) * 100
+          )
+        : 0;
+
+    this.highPriority =
+      tasks.filter(t => t.priority === 'High').length;
+
+    this.mediumPriority =
+      tasks.filter(t => t.priority === 'Medium').length;
+
+    this.lowPriority =
+      tasks.filter(t => t.priority === 'Low').length;
   }
-
-  
-
 }

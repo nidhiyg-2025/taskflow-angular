@@ -12,61 +12,96 @@ import { FormsModule } from '@angular/forms';
 })
 export class Settings implements OnInit {
 
-
- 
-
-
   editProfile = false;
 
-
   user = {
-
-    name: 'Nidhi',
-
-    email: 'nidhi@example.com'
-
+    name: '',
+    email: ''
   };
 
-
-
   settings = {
-
-  taskReminder: true,
-
-  defaultPriority: 'Medium'
-
-};
-
-
+    taskReminder: true,
+    defaultPriority: 'Medium'
+  };
 
   ngOnInit(): void {
 
     this.loadProfile();
-
     this.loadSettings();
 
   }
 
+  getCurrentUser(): any {
 
+    const user = localStorage.getItem('currentUser');
 
+    if (user) {
+      return JSON.parse(user);
+    }
+
+    return null;
+  }
+
+  getUserStorageKey(key: string): string {
+
+    const user = this.getCurrentUser();
+
+    if (!user) {
+      return `${key}_guest`;
+    }
+
+    return `${key}_${user.id}`;
+  }
 
   // Profile Section
 
-  toggleProfileEdit(){
+  toggleProfileEdit() {
 
     this.editProfile = !this.editProfile;
 
   }
 
+  saveProfile() {
 
+    const currentUser = this.getCurrentUser();
 
-  saveProfile(){
+    if (!currentUser) {
+      return;
+    }
 
+    // Update profile information
+    currentUser.fullName = this.user.name;
+    currentUser.email = this.user.email;
+
+    // Update current logged-in user
     localStorage.setItem(
-      'profile',
-      JSON.stringify(this.user)
+      'currentUser',
+      JSON.stringify(currentUser)
     );
 
+    // Also update the registered user
+    const users = JSON.parse(
+      localStorage.getItem('users') || '[]'
+    );
+
+    const index = users.findIndex(
+      (u: any) => u.id === currentUser.id
+    );
+
+    if (index !== -1) {
+
+      users[index] = {
+        ...users[index],
+        fullName: this.user.name,
+        email: this.user.email
+      };
+
+      localStorage.setItem(
+        'users',
+        JSON.stringify(users)
+      );
+
+    }
 
     this.editProfile = false;
 
@@ -74,50 +109,47 @@ export class Settings implements OnInit {
 
   }
 
+  loadProfile() {
 
+    const currentUser = this.getCurrentUser();
 
-  loadProfile(){
+    if (currentUser) {
 
-    const profile =
-    localStorage.getItem('profile');
-
-
-    if(profile){
-
-      this.user =
-      JSON.parse(profile);
+      this.user = {
+        name: currentUser.fullName,
+        email: currentUser.email
+      };
 
     }
 
   }
 
-
-
-
-
   // Settings Section
 
+  loadSettings() {
 
-  loadSettings(){
+    const storageKey =
+      this.getUserStorageKey('settings');
 
-  const savedSettings =
-  localStorage.getItem('settings');
+    const savedSettings =
+      localStorage.getItem(storageKey);
 
-  if(savedSettings){
+    if (savedSettings) {
 
-    this.settings =
-    JSON.parse(savedSettings);
+      this.settings =
+        JSON.parse(savedSettings);
+
+    }
 
   }
 
-}
+  saveSettings() {
 
-
-
-  saveSettings(){
+    const storageKey =
+      this.getUserStorageKey('settings');
 
     localStorage.setItem(
-      'settings',
+      storageKey,
       JSON.stringify(this.settings)
     );
 
@@ -125,38 +157,28 @@ export class Settings implements OnInit {
 
   }
 
+  clearTasks() {
 
+    const storageKey =
+      this.getUserStorageKey('tasks');
 
-
-
-
-  clearTasks(){
-
-    localStorage.removeItem('tasks');
+    localStorage.removeItem(storageKey);
 
     alert('All tasks deleted');
 
   }
 
-
-
-
-
-  resetSettings(){
+  resetSettings() {
 
     this.settings = {
 
-  taskReminder: true,
+      taskReminder: true,
+      defaultPriority: 'Medium'
 
-  defaultPriority: 'Medium'
-
-};
-
+    };
 
     this.saveSettings();
 
   }
-
-
 
 }

@@ -44,9 +44,34 @@ export class Tasks {
     this.loadTasks();
   }
 
+  // Get the currently logged-in user
+  getCurrentUser(): any {
+    const user = localStorage.getItem('currentUser');
+
+    if (user) {
+      return JSON.parse(user);
+    }
+
+    return null;
+  }
+
+  // Create a unique storage key for each user
+  getTaskStorageKey(): string {
+
+    const user = this.getCurrentUser();
+
+    if (!user) {
+      return 'tasks_guest';
+    }
+
+    return `tasks_${user.id}`;
+  }
+
   loadTasks() {
 
-    const savedTasks = localStorage.getItem('tasks');
+    const storageKey = this.getTaskStorageKey();
+
+    const savedTasks = localStorage.getItem(storageKey);
 
     if (savedTasks) {
 
@@ -54,43 +79,24 @@ export class Tasks {
 
     } else {
 
-      this.tasks = [
-        {
-          id: 1,
-          title: 'Design Authentication Screen',
-          description: 'Create premium login UI',
-          priority: 'High',
-          status: 'Completed',
-          dueDate: '2026-07-28'
-        },
-        {
-          id: 2,
-          title: 'Build Dashboard Layout',
-          description: 'Design dashboard cards and charts',
-          priority: 'Medium',
-          status: 'In Progress',
-          dueDate: '2026-07-30'
-        },
-        {
-          id: 3,
-          title: 'Develop Analytics Module',
-          description: 'Implement analytics graphs',
-          priority: 'Low',
-          status: 'Pending',
-          dueDate: '2026-08-02'
-        }
-      ];
+      // New users start with an empty task list
+      this.tasks = [];
 
       this.saveToLocalStorage();
 
     }
 
     this.filterTasks();
-
   }
 
   saveToLocalStorage() {
-    localStorage.setItem('tasks', JSON.stringify(this.tasks));
+
+    const storageKey = this.getTaskStorageKey();
+
+    localStorage.setItem(
+      storageKey,
+      JSON.stringify(this.tasks)
+    );
   }
 
   searchTasks() {
@@ -120,7 +126,6 @@ export class Tasks {
       return matchesSearch && matchesStatus && matchesPriority;
 
     });
-
   }
 
   openModal() {
@@ -138,7 +143,6 @@ export class Tasks {
     };
 
     this.showModal = true;
-
   }
 
   closeModal() {
@@ -156,7 +160,6 @@ export class Tasks {
       status: 'Pending',
       dueDate: ''
     };
-
   }
 
   saveTask() {
@@ -173,7 +176,6 @@ export class Tasks {
           ...this.newTask,
           id: this.editingTaskId
         };
-
       }
 
     } else {
@@ -182,38 +184,37 @@ export class Tasks {
         ...this.newTask,
         id: Date.now()
       });
-
     }
 
     this.saveToLocalStorage();
-    this.filterTasks();
-    this.closeModal();
 
+    this.filterTasks();
+
+    this.closeModal();
   }
 
   editTask(task: Task) {
 
     this.isEditMode = true;
+
     this.editingTaskId = task.id;
 
     this.newTask = { ...task };
 
     this.showModal = true;
-
   }
 
   deleteTask(id: number) {
 
     if (confirm('Are you sure you want to delete this task?')) {
 
-      this.tasks = this.tasks.filter(task => task.id !== id);
+      this.tasks = this.tasks.filter(
+        task => task.id !== id
+      );
 
       this.saveToLocalStorage();
 
       this.filterTasks();
-
     }
-
   }
-
 }

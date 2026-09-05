@@ -67,12 +67,12 @@
         (click)="toggleProfileMenu()">
 
         <img
-          src="https://ui-avatars.com/api/?name=Nidhi&background=4F46E5&color=fff"
-          alt="Profile">
+  [src]="'https://ui-avatars.com/api/?name=' + (currentUser?.fullName || 'User') + '&background=4F46E5&color=fff'"
+  alt="Profile">
 
         <div class="profile-details">
 
-          <h6>Nidhi</h6>
+          <h6>{{ currentUser?.fullName || 'User' }}</h6>
 
           <small>Project Manager</small>
 

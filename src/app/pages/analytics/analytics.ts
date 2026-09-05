@@ -38,11 +38,45 @@ export class Analytics implements OnInit {
     this.loadAnalytics();
   }
 
+  getCurrentUser(): any {
+
+    const user = localStorage.getItem('currentUser');
+
+    if (user) {
+      return JSON.parse(user);
+    }
+
+    return null;
+  }
+
+  getTaskStorageKey(): string {
+
+    const user = this.getCurrentUser();
+
+    if (!user) {
+      return 'tasks_guest';
+    }
+
+    return `tasks_${user.id}`;
+  }
+
   loadAnalytics() {
 
-    const saved = localStorage.getItem('tasks');
+    const storageKey = this.getTaskStorageKey();
+
+    const saved = localStorage.getItem(storageKey);
 
     if (!saved) {
+
+      this.totalTasks = 0;
+      this.completedTasks = 0;
+      this.pendingTasks = 0;
+      this.inProgressTasks = 0;
+
+      this.highPriority = 0;
+      this.mediumPriority = 0;
+      this.lowPriority = 0;
+
       return;
     }
 

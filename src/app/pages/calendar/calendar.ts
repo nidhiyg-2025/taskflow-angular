@@ -14,20 +14,18 @@ interface Task {
 @Component({
   selector: 'app-calendar',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './calendar.html',
   styleUrl: './calendar.css'
 })
 export class Calendar implements OnInit {
 
   selectedTask: Task | null = null;
-
-showTaskDetails = false;
+  showTaskDetails = false;
 
   tasks: Task[] = [];
 
-today = new Date();
-
+  today = new Date();
   currentDate = new Date();
 
   currentMonth = '';
@@ -38,222 +36,226 @@ today = new Date();
   calendarDays: (number | null)[] = [];
   selectedDate: number | null = null;
 
-showTaskForm = false;
+  showTaskForm = false;
 
-newTask = {
-  title: '',
-  description: '',
-  priority: 'Medium' as 'High' | 'Medium' | 'Low',
-  status: 'Pending' as 'Pending' | 'In Progress' | 'Completed',
-  dueDate: ''
-};
+  newTask = {
+    title: '',
+    description: '',
+    priority: 'Medium' as 'High' | 'Medium' | 'Low',
+    status: 'Pending' as 'Pending' | 'In Progress' | 'Completed',
+    dueDate: ''
+  };
 
-editMode = false;
+  editMode = false;
 
-editTask: Task = {
-  id: 0,
-  title: '',
-  description: '',
-  priority: 'Medium',
-  status: 'Pending',
-  dueDate: ''
-};
+  editTask: Task = {
+    id: 0,
+    title: '',
+    description: '',
+    priority: 'Medium',
+    status: 'Pending',
+    dueDate: ''
+  };
 
-startEditTask(){
+  // Get logged-in user
+  getCurrentUser(): any {
 
-  if(this.selectedTask){
+    const user = localStorage.getItem('currentUser');
 
-    this.editTask = {
-      ...this.selectedTask
-    };
+    if (user) {
+      return JSON.parse(user);
+    }
 
-    this.editMode = true;
-
+    return null;
   }
 
-}
+  // Get user-specific task storage key
+  getTaskStorageKey(): string {
 
-updateTask(){
+    const user = this.getCurrentUser();
 
- const index =
- this.tasks.findIndex(
-   t => t.id === this.editTask.id
- );
+    if (!user) {
+      return 'tasks_guest';
+    }
 
+    return `tasks_${user.id}`;
+  }
 
- if(index !== -1){
+  startEditTask() {
 
-   this.tasks[index] =
-   this.editTask;
+    if (this.selectedTask) {
 
+      this.editTask = {
+        ...this.selectedTask
+      };
 
-   localStorage.setItem(
-     'tasks',
-     JSON.stringify(this.tasks)
-   );
+      this.editMode = true;
+    }
+  }
 
- }
+  updateTask() {
 
+    const index =
+      this.tasks.findIndex(
+        t => t.id === this.editTask.id
+      );
 
- this.editMode = false;
+    if (index !== -1) {
 
- this.showTaskDetails = false;
+      this.tasks[index] = {
+        ...this.editTask
+      };
 
-}
+      this.saveToLocalStorage();
+    }
 
-selectDate(day:number | null){
+    this.editMode = false;
+    this.showTaskDetails = false;
+  }
 
-  if(!day) return;
+  selectDate(day: number | null) {
 
+    if (!day) return;
 
-  this.selectedDate = day;
+    this.selectedDate = day;
 
+    const month =
+      this.currentDate.getMonth() + 1;
 
-  const month =
-    this.currentDate.getMonth() + 1;
+    const year =
+      this.currentDate.getFullYear();
 
+    this.newTask.dueDate =
+      `${year}-${month.toString().padStart(2, '0')}-${day
+        .toString()
+        .padStart(2, '0')}`;
 
-  const year =
-    this.currentDate.getFullYear();
+    this.showTaskForm = true;
+  }
 
+  openTask(task: Task) {
 
-  this.newTask.dueDate =
-    `${year}-${month.toString().padStart(2,'0')}-${day.toString().padStart(2,'0')}`;
+    this.selectedTask = task;
+    this.showTaskDetails = true;
+  }
 
+  deleteTask(id: number) {
 
-  this.showTaskForm = true;
+    this.tasks =
+      this.tasks.filter(
+        task => task.id !== id
+      );
 
-}
+    this.saveToLocalStorage();
 
-openTask(task: Task){
+    this.showTaskDetails = false;
+  }
 
-  this.selectedTask = task;
+  saveTask() {
 
-  this.showTaskDetails = true;
+    if (!this.newTask.title.trim()) {
+      return;
+    }
 
-}
+    const task: Task = {
+      id: Date.now(),
+      ...this.newTask
+    };
 
-deleteTask(id:number){
+    this.tasks.push(task);
 
-  this.tasks =
-  this.tasks.filter(
-    task => task.id !== id
-  );
+    this.saveToLocalStorage();
 
+    this.showTaskForm = false;
 
-  localStorage.setItem(
-    'tasks',
-    JSON.stringify(this.tasks)
-  );
-
-
-  this.showTaskDetails = false;
-
-}
-
-saveTask(){
-
- if(!this.newTask.title.trim()){
-   return;
- }
-
-
- const task = {
-
-   id: Date.now(),
-
-   ...this.newTask
-
- };
-
-
- this.tasks.push(task);
-
-
- localStorage.setItem(
-   'tasks',
-   JSON.stringify(this.tasks)
- );
-
-
- this.showTaskForm = false;
-
-
- this.newTask = {
-
- title:'',
- description:'',
- priority:'Medium',
- status:'Pending',
- dueDate:''
-
- };
-
-
-}
+    this.newTask = {
+      title: '',
+      description: '',
+      priority: 'Medium',
+      status: 'Pending',
+      dueDate: ''
+    };
+  }
 
   ngOnInit(): void {
-     this.loadTasks();
+
+    this.loadTasks();
+
     this.generateCalendar();
   }
 
   loadTasks() {
 
-  const saved = localStorage.getItem('tasks');
+    const storageKey = this.getTaskStorageKey();
 
-  if (saved) {
-    this.tasks = JSON.parse(saved);
+    const saved =
+      localStorage.getItem(storageKey);
+
+    if (saved) {
+
+      this.tasks = JSON.parse(saved);
+
+    } else {
+
+      this.tasks = [];
+    }
   }
 
-}
+  saveToLocalStorage() {
 
-isToday(day: number | null): boolean {
+    const storageKey =
+      this.getTaskStorageKey();
 
-  if(day === null) return false;
+    localStorage.setItem(
+      storageKey,
+      JSON.stringify(this.tasks)
+    );
+  }
 
-  return (
-    day === this.today.getDate() &&
-    this.currentDate.getMonth() === this.today.getMonth() &&
-    this.currentDate.getFullYear() === this.today.getFullYear()
-  );
+  isToday(day: number | null): boolean {
 
-}
-
-hasTask(day: number | null): boolean {
-
-  if (!day) return false;
-
-  return this.tasks.some(task => {
-
-    const date = new Date(task.dueDate);
+    if (day === null) return false;
 
     return (
-      date.getDate() === day &&
-      date.getMonth() === this.currentDate.getMonth() &&
-      date.getFullYear() === this.currentDate.getFullYear()
+      day === this.today.getDate() &&
+      this.currentDate.getMonth() === this.today.getMonth() &&
+      this.currentDate.getFullYear() === this.today.getFullYear()
     );
+  }
 
-  });
+  hasTask(day: number | null): boolean {
 
-}
+    if (!day) return false;
 
-getTasksForDay(day:number | null): Task[] {
+    return this.tasks.some(task => {
 
-  if(!day) return [];
+      const date = new Date(task.dueDate);
 
-  return this.tasks.filter(task => {
+      return (
+        date.getDate() === day &&
+        date.getMonth() === this.currentDate.getMonth() &&
+        date.getFullYear() === this.currentDate.getFullYear()
+      );
 
-    const date = new Date(task.dueDate);
+    });
+  }
 
-    return (
-      date.getDate() === day &&
-      date.getMonth() === this.currentDate.getMonth() &&
-      date.getFullYear() === this.currentDate.getFullYear()
-    );
+  getTasksForDay(day: number | null): Task[] {
 
-  });
+    if (!day) return [];
 
-}
+    return this.tasks.filter(task => {
+
+      const date = new Date(task.dueDate);
+
+      return (
+        date.getDate() === day &&
+        date.getMonth() === this.currentDate.getMonth() &&
+        date.getFullYear() === this.currentDate.getFullYear()
+      );
+
+    });
+  }
 
   generateCalendar() {
 
@@ -281,16 +283,13 @@ getTasksForDay(day:number | null): Task[] {
         0
       ).getDate();
 
-    // Empty cells before month starts
     for (let i = 0; i < firstDay; i++) {
       this.calendarDays.push(null);
     }
 
-    // Month days
     for (let day = 1; day <= daysInMonth; day++) {
       this.calendarDays.push(day);
     }
-
   }
 
   previousMonth() {
@@ -303,7 +302,6 @@ getTasksForDay(day:number | null): Task[] {
       );
 
     this.generateCalendar();
-
   }
 
   nextMonth() {
@@ -316,7 +314,5 @@ getTasksForDay(day:number | null): Task[] {
       );
 
     this.generateCalendar();
-
   }
-
 }

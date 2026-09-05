@@ -187,3 +187,18 @@ display:none;
 }
 
 }
+
+.register-link{
+    margin-top:25px;
+}
+
+.register-link p{
+    color:#6B7280;
+    margin-bottom:10px;
+}
+
+.register-link .btn{
+    width:220px;
+    border-radius:10px;
+    font-weight:600;
+}
